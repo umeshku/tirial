@@ -1,0 +1,29 @@
+{% extends 'smartprofile/base.html' %}
+{% block content%}
+{% if messages %}
+{% for message in messages%}
+{{message}}
+{% endfor %}
+{% endif %}
+<br>
+<h3 style="display: inline">Household Detail of : {{ household.HH_Head_Name }}</h3>
+<h2>Household Member List:  {{household.personal_set.count}} Member </h2>
+
+  <br>
+  <br>
+  <form class=""  method="POST">{% csrf_token %}
+    {% for field in form %}
+    <div class="form-group row">
+      <label for="id_{{field.name}}" class="col-2 col-form-label" disabled>{{field.label}}</label>
+        <div class="col-10" disabled>
+        {{field}}
+        </div>
+      </div>
+      {% endfor %}
+      <button type="submit" Class="btn btn-info" name="button">UPDATE</button>
+      </form>
+
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+{% endblock %}

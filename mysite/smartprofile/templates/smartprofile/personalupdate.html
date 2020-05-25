@@ -1,0 +1,23 @@
+{% extends 'smartprofile/base.html' %}
+{% block content%}
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<h3>Update of : {{ Personal.Name }}</h3>
+
+<h3>Name of HouseHead: <a href="{% url 'smartprofile:hhdetail' household.KEY %}">{{ household.HH_Head_Name }}<a>
+
+  <br>
+  <form class=""  method="POST">{% csrf_token %}
+    {% for field in form %}
+    <div class="form-group row">
+      <label for="id_{{field.name}}" class="col-2 col-form-label" disabled>{{field.label}}</label>
+        <div class="col-10" disabled>
+        {{field}}
+        </div>
+      </div>
+      {% endfor %}
+      <button type="submit" Class="btn btn-info" name="button">UPDATE</button>
+      </form>
+
+
+{% endblock %}

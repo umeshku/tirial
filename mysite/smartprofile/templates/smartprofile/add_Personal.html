@@ -1,0 +1,22 @@
+{% extends 'smartprofile/base.html' %}
+{% block content%}
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+<h3>Personal Detail of : </h3>
+<h3>Name of HouseHead: <a href="{% url 'smartprofile:hhdetail' household.KEY %}">{{ household.HH_Head_Name }}<a> and currently there are  : {{household.personal_set.count}} Member and your are adding {{household.personal_set.count|add:1}} Member</h3>
+
+  <br>
+  <form class=""  method="POST">
+    {% csrf_token %}
+<table class="table">
+
+
+       {{ form.as_table }}
+
+
+
+      </table>
+      <button type="submit" Class="btn btn-primary" name="button">Add</button>
+      </form>
+
+
+{% endblock %}

@@ -1,0 +1,136 @@
+{% extends 'smartprofile/base.html' %}
+
+{% block js%}
+{% comment %} datatable {% endcomment %}
+
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('#example thead tr').clone(true).appendTo('#example thead');
+      // Setup - add a text input to each footer cell
+       $('#example thead tr:eq(1) th').each( function (i) {
+             var title = $(this).text();
+             $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+
+      } );
+
+      var table = $('#example').DataTable({
+            dom: "Blrtip",
+
+            lengthMenu: [
+             [ 15, 25, 50, -1 ],
+             [ '15 rows', '25 rows', '50 rows', 'Show all' ]
+          ],
+
+            "orderCellsTop": true,
+            "fixedHeader": true,
+            "scrollX":true,
+            "scrollY":'400px',
+            "processing": true,
+            "serverSide": true,
+            ajax: "{% url 'smartprofile:HouseholdListJson' %}",
+            buttons: ['copy', 'csv', 'excel', 'pdf', {
+              extend: 'colvis',
+              collectionLayout: 'fixed two-column'
+              // postfixButtons: [ 'colvisRestore' ]
+          },  {
+              extend: 'colvisGroup',
+              text: 'Hide General(Ward, Tol)',
+              show: [ 0,1, 2 ],
+              hide: [ 3, 4, 5 ]
+          },
+          {
+              extend: 'colvisGroup',
+              text: 'Hide Dates',
+              show: [ 3, 4, 5 ],
+              hide: [ 0,1, 2 ]
+          },
+          {
+              extend: 'colvisGroup',
+              text: 'Show all',
+              show: ':hidden'
+          }
+          ],
+          language: {
+              buttons: {
+                    colvis: 'Change columns'
+                      }
+                  }
+        });
+
+
+        // Apply the search
+
+
+
+            $(table.table().container()).on('keyup', 'thead input', function () {
+              console.log("hehe")
+          table
+          .column($(this).parent().index()+':visible')
+               .search(this.value)
+               .draw();
+          });
+          // clear Serch
+      $('#clear-filters').click(function () {
+          table.columns().every(function() {
+            $(this.header()).find('input').val('');
+          });
+          $('thead input').val('');
+          $('thead select').prop('selectedIndex', 0);
+          table.ajax.reload();
+          table.columns().search('').draw();
+        });
+        //get row data
+        $('#example tbody').on('dblclick', 'tr', function () {
+      var data = table.row( this ).data();
+      var i=data.length-1;
+      var key=data[i]
+      var url="{% url 'smartprofile:hhdetail' 123 %}";
+      document.location.href = url.replace('123', key);
+      } );
+  //toogle collor
+        $('tbody').on('click', 'tr', function () {
+                $('#example tbody tr').css('background-color','')
+                var data = table.row( this ).data();
+                $(this).css('background-color','red');
+
+            } );
+
+
+
+    });
+</script>
+{% endblock%}
+
+{% block content %}
+
+
+<br>
+<h2>Household Data Table</h2>
+<h5>Total Number of Household: {{household.count}}</h5>
+<br>
+<a class="btn btn-primary" href="{% url 'smartprofile:add_Household' %}"
+role="button">Add Household</a>
+<br>
+<br>
+<div class="container">
+<table id="example" class="display nowrap">
+  <thead>
+    <tr>
+        {% for f in columns1 %}
+          <th>{{f}}</th>
+        {% endfor %}
+    </tr>
+
+  </thead>
+  <tbody>
+
+  </tbody>
+
+</table>
+</div>
+<button id="clear-filters" class="btn btn-primary">Clear all filters</button>
+
+{% endblock %}

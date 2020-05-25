@@ -1,0 +1,17 @@
+{% extends 'smartprofile/base.html' %}
+{% block content%}
+{% load crispy_forms_tags %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{{ form.media }}
+<h3>Add Household</h3>
+  <br>
+
+<form class="" method="POST">
+  {% csrf_token %}
+  {{ form|crispy }}
+    <button type="submit" Class="btn btn-primary" name="button">Add</button>
+    </form>
+
+{% endblock %}

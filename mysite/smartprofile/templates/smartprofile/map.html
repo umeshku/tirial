@@ -1,0 +1,83 @@
+{% extends 'smartprofile/base.html' %}
+
+{% block js %}
+
+        <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.3.1/build/ol.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.3.1/css/ol.css">
+        <style>
+        .map {
+          height: 400px;
+          width: 100%;
+        }
+        </style>
+
+{% endblock %}
+
+{% block content %}
+
+
+{{household}}
+
+
+<h2>My Map</h2>
+<select id="layer-select">
+ <option value="Aerial">Aerial</option>
+ <option value="AerialWithLabelsOnDemand" selected>Aerial with labels</option>
+ <option value="RoadOnDemand">Road</option>
+ <option value="CanvasDark">Road dark</option>
+ <option value="OrdnanceSurvey">Ordnance Survey</option>
+</select>
+    <div id="map" class="map">
+
+    </div>
+    <p>Lat_Long</p>
+    <p id="coords"></p>
+
+{% endblock %}
+{% block footerjs%}
+<script >
+var map = new ol.Map({
+        target: 'map',
+        layers: [
+          new ol.layer.Tile({
+            source: new ol.source.OSM(),
+            visible:true,
+            title : 'OSM'
+          })
+        ],
+        view: new ol.View({
+          center: ol.proj.fromLonLat([37.41, 8.82]),
+          zoom: 4
+        })
+      });
+const openStreetMapStandart= new ol.layer.Tile({
+  source: new ol.source.OSM(),
+  visible: false,
+  title : 'OSMStandard'
+})
+
+const openStreetMapHumanitarian= new ol.layer.Tile({
+  source: new ol.source.osm({
+    url: 'https://{a-c}.tile.openstreetmap.fr/hot/{Z}/{x}/{y}.png'
+  }),
+  visible:Ture,
+  title: 'OSMH'
+  })
+
+
+  map.on('click', function(evt){
+    console.info(evt.pixel);
+    console.info(map.getPixelFromCoordinate(evt.coordinate));
+    console.info(ol.proj.toLonLat(evt.coordinate));
+    var coords = ol.proj.toLonLat(evt.coordinate);
+    var lat = coords[1];
+    var lon = coords[0];
+    var locTxt = "Latitude: " + lat + " Longitude: " + lon;
+    // coords is a div in HTML below the map to display
+    document.getElementById('coords').innerHTML = locTxt;
+
+    });
+    map.addControl(new ol.control.LayerSwitcher());
+
+    </script>
+{%endblock%}

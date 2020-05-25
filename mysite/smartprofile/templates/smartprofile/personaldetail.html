@@ -1,0 +1,30 @@
+{% extends 'smartprofile/base.html' %}
+{% block content%}
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+<a style="float:right; position: relative; display: inline-block;"
+class="btn btn-info" title="Edit" data-toggle="tooltip" role="button"
+href="{% url 'smartprofile:personalupdate' Personal.id %}"
+>UPDATE</a>
+<a style="float:right; position: relative ; display: inline-block;"
+class="btn btn-danger" title="Delete" data-toggle="tooltip" role="button"
+href="{% url 'smartprofile:personaldelete' Personal.id %}"
+>DELETE</a>
+
+<h3>Personal Detail of : {{ Personal.Name }}</h3>
+
+<h3>Name of HouseHead: <a href="{% url 'smartprofile:hhdetail' household.KEY %}">{{ household.HH_Head_Name }}<a> and Total numbe of Persona on this House is :{{household.personal_set.count}}</h3>
+
+  <br>
+  <form class="" action="index.html" method="post">
+    {% for field in form %}
+    <div class="form-group row">
+      <label for="id_{{field.name}}" class="col-2 col-form-label" disabled>{{field.label}}</label>
+        <div class="col-10" disabled>
+        {{field}}
+        </div>
+      </div>
+      {% endfor %}
+      </form>
+
+
+{% endblock %}

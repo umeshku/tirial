@@ -1,0 +1,62 @@
+{% extends 'smartprofile/base.html' %}
+{% block content%}
+{% if messages %}
+{% for message in messages%}
+{{message}}
+{% endfor %}
+{% endif %}
+<br>
+<h3 style="display: inline">Household Detail of : {{ household.HH_Head_Name }}</h3>
+<a style="float:right; position: relative; display: inline-block;"
+class="btn btn-info" title="Edit" data-toggle="tooltip" role="button"
+href="{% url 'smartprofile:householdupdate' household.KEY %}"
+>EDIT</a>
+<a style="float:right; position: relative ; display: inline-block;"
+class="btn btn-danger" title="Delete" data-toggle="tooltip" role="button"
+href="{% url 'smartprofile:householddelete' household.KEY %}"
+>DELETE</a>
+
+  <br>
+  <br>
+  <form class=""  method="post">
+    {% for field in form %}
+    <div class="form-group row">
+      <label for="id_{{field.name}}" class="col-2 col-form-label" disabled>{{field.label}}</label>
+        <div class="col-10" disabled>
+        {{field}}
+        </div>
+      </div>
+      {% endfor %}
+      </form>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<h2>Household Member List:  {{household.personal_set.count}} Member </h2>
+<a class="btn btn-primary" href="{% url 'smartprofile:add_Personal' pk=household.KEY %}" role="button">Add Personal</a>
+<br><br>
+<table id="HouseHold" class="table table-striped table-bordered" style="width:100%">
+  <thead>
+            <tr>
+                <th>Ward</th>
+                <th>Name</th>
+                <th>Parent Key</th>
+                <th>View details</th>
+              </tr>
+        </thead>
+        <tbody>
+          {% for Personal in household.personal_set.all %}
+
+            <tr>
+              <td>  {{Personal.Ward}}</td>
+              <td>  {{Personal.Name}}</td>
+              <td>  {{Personal.PARENT_KEY}}</td>
+              <td><a href="{% url 'smartprofile:personaldetail' Personal.id %}">  {{Personal.id}}</a></td>
+            </tr>
+
+          {% endfor %}
+
+
+        </tbody>
+</table>
+
+{% endblock %}
